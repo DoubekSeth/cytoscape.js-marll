@@ -1,3 +1,4 @@
+let qArray = [];
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -170,7 +171,7 @@ Object.defineProperty(exports, "__esModule", {
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-var qArray;
+
 var FDLayout = function () {
 	function FDLayout(options) {
 		_classCallCheck(this, FDLayout);
@@ -526,11 +527,6 @@ var ContinuousLayout = function () {
 
 			l.prerun(s);
 
-			//Do this to track the q-vals for "node 0"
-			qArray = [];
-			qArray.push(s.nodes[0].agent.Q)
-			console.log(s.nodes[0].agent.Q);
-
 			if (s.animateContinuously) {
 				var ungrabify = function ungrabify(node) {
 					if (!s.ungrabifyWhileSimulating) {
@@ -631,7 +627,6 @@ var ContinuousLayout = function () {
 				_frame(); // kick off
 			} else {
 				alltick(s);
-				qArray.push(s.nodes[0].agent.Q);
 				s.eles.layoutPositions(this, s, function (node) {
 					return getNodePositionData(node, s);
 				});
@@ -640,6 +635,7 @@ var ContinuousLayout = function () {
 			l.postrun(s);
 			
 			//From https://stackoverflow.com/questions/18848860/javascript-array-to-csv
+			console.log(qArray);
 			let lineArray = [];
 			qArray.forEach(function (infoArray, index) {
     			var line = infoArray + ",";
@@ -1292,8 +1288,6 @@ var Layout = function (_ContinuousLayout) {
 			var isDone = true;
 
 			qArray.push(state.nodes[0].agent.Q);
-			//console.log(state.nodes[0].agent.Q);
-
 
 			state.nodes.forEach(function (n) {
 				_this4.takeStep(n);
