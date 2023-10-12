@@ -105,7 +105,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 "use strict";
 
-
 // Simple, internal Object.assign() polyfill for options objects etc.
 
 module.exports = Object.assign != null ? Object.assign.bind(Object) : function (tgt) {
@@ -171,7 +170,7 @@ Object.defineProperty(exports, "__esModule", {
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+var qArray;
 var FDLayout = function () {
 	function FDLayout(options) {
 		_classCallCheck(this, FDLayout);
@@ -505,6 +504,7 @@ var ContinuousLayout = function () {
 		value: function run() {
 			var l = this;
 			var s = this.state;
+			
 
 			s.tickIndex = 0;
 			s.firstUpdate = true;
@@ -525,6 +525,11 @@ var ContinuousLayout = function () {
 			});
 
 			l.prerun(s);
+
+			//Do this to track the q-vals for "node 0"
+			qArray = [];
+			qArray.push(s.nodes[0].agent.Q)
+			console.log(s.nodes[0].agent.Q);
 
 			if (s.animateContinuously) {
 				var ungrabify = function ungrabify(node) {
@@ -626,13 +631,22 @@ var ContinuousLayout = function () {
 				_frame(); // kick off
 			} else {
 				alltick(s);
-
+				qArray.push(s.nodes[0].agent.Q);
 				s.eles.layoutPositions(this, s, function (node) {
 					return getNodePositionData(node, s);
 				});
 			}
 
 			l.postrun(s);
+			
+			//From https://stackoverflow.com/questions/18848860/javascript-array-to-csv
+			let lineArray = [];
+			qArray.forEach(function (infoArray, index) {
+    			var line = infoArray + ",";
+    			lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
+			});
+			let csvContent = lineArray.join("\n");
+			console.log(csvContent);
 
 			return this; // chaining
 		}
@@ -771,7 +785,6 @@ var tick = function tick(state) {
 	var l = state.layout;
 
 	var tickIndicatesDone = l.tick(s);
-
 	if (s.firstUpdate) {
 		if (s.animateContinuously) {
 			// indicate the initial positions have been set
@@ -983,6 +996,7 @@ var Layout = function (_ContinuousLayout) {
 			spec.beta = 0.3; // learning rate for smooth policy update
 
 			scratch.agent = new RL.TDAgent(env, spec);
+			//console.log(scratch.agent);
 			scratch.env = env;
 			scratch.state = 4;
 			scratch.agent.counter = 0;
@@ -1249,7 +1263,6 @@ var Layout = function (_ContinuousLayout) {
 			// regular nodes
 			state.nodes.forEach(function (n) {
 				var scratch = n; //state.layoutData[n.id()];//this.getScratch( n ); // per-element layout data/state, x/y, etc.
-
 				n.springForceX = 0;
 				n.springForceY = 0;
 				n.repulsionForceX = 0;
@@ -1264,6 +1277,7 @@ var Layout = function (_ContinuousLayout) {
 				n.ID = n.id();
 
 				_this3.initAgent(n, scratch);
+				//console.log(scratch.agent);
 			});
 		}
 
@@ -1277,14 +1291,18 @@ var Layout = function (_ContinuousLayout) {
 			var state = this.state;
 			var isDone = true;
 
+			qArray.push(state.nodes[0].agent.Q);
+			//console.log(state.nodes[0].agent.Q);
+
+
 			state.nodes.forEach(function (n) {
 				_this4.takeStep(n);
-
 				n.springForceX = 0;
 				n.springForceY = 0;
 				n.repulsionForceX = 0;
 				n.repulsionForceY = 0;
 			});
+			//console.log(state.nodes);
 
 			if (this.state.currentIteration > 0 && this.state.currentIteration % 800 == 0) {
 				this.state.delta /= 2;
