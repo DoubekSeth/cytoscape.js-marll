@@ -635,10 +635,12 @@ var ContinuousLayout = function () {
 			l.postrun(s);
 			
 			//From https://stackoverflow.com/questions/18848860/javascript-array-to-csv
+
 			console.log(qArray);
 			let lineArray = [];
 			qArray.forEach(function (infoArray, index) {
-    			var line = infoArray + ",";
+    			var line = infoArray.join(",");
+				console.log(line);
     			lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
 			});
 			let csvContent = lineArray.join("\n");
