@@ -637,6 +637,7 @@ var ContinuousLayout = function () {
 			//From https://stackoverflow.com/questions/18848860/javascript-array-to-csv
 
 			console.log(qArray);
+			/**
 			let lineArray = [];
 			qArray.forEach(function (infoArray, index) {
     			var line = infoArray.join(",");
@@ -645,6 +646,7 @@ var ContinuousLayout = function () {
 			});
 			let csvContent = lineArray.join("\n");
 			console.log(csvContent);
+			*/
 
 			return this; // chaining
 		}
@@ -1289,8 +1291,6 @@ var Layout = function (_ContinuousLayout) {
 			var state = this.state;
 			var isDone = true;
 
-			qArray.push(state.nodes[0].agent.Q);
-
 			state.nodes.forEach(function (n) {
 				_this4.takeStep(n);
 				n.springForceX = 0;
@@ -1303,6 +1303,8 @@ var Layout = function (_ContinuousLayout) {
 			if (this.state.currentIteration > 0 && this.state.currentIteration % 800 == 0) {
 				this.state.delta /= 2;
 			}
+
+			qArray.push(JSON.parse(JSON.stringify(state.nodes[0].agent.Q)));
 			return false; //this.FDLayout.isConverged();
 		}
 
@@ -1310,7 +1312,7 @@ var Layout = function (_ContinuousLayout) {
 
 	}, {
 		key: 'postrun',
-		value: function postrun() {}
+		value: function postrun() {console.log(this.state.nodes)}
 
 		// clean up any object refs that could prevent garbage collection, etc.
 
