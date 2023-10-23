@@ -416,7 +416,7 @@ exports.FDLayout = FDLayout;
 module.exports = Object.freeze({
 	animate: true, // whether to show the layout as it's running; special 'end' value makes the layout animate like a discrete layout
 	refresh: 10, // number of ticks per frame; higher is faster but more jerky
-	maxIterations: 1000, // max iterations before the layout will bail out
+	maxIterations: 100000, // max iterations before the layout will bail out
 	maxSimulationTime: 40000, // max length in ms to run the layout
 	ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
 	fit: true, // on every layout reposition of nodes, fit the viewport
@@ -484,7 +484,8 @@ var ContinuousLayout = function () {
 			edges: o.eles.edges().toArray(),
 			nodesCollection: o.eles.nodes(),
 			tickIndex: 0,
-			firstUpdate: true
+			firstUpdate: true,
+			learning: true
 		});
 
 		s.animateEnd = o.animate && o.animate === 'end';
@@ -637,15 +638,15 @@ var ContinuousLayout = function () {
 			//From https://stackoverflow.com/questions/18848860/javascript-array-to-csv
 
 			console.log(qArray);
-			let lineArray = [];
+			/**let lineArray = [];
 			qArray.forEach(function (infoArray, index) {
     			var line = infoArray.join(",");
-				console.log(line);
+				//console.log(line);
     			lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
 			});
 			let csvContent = lineArray.join("\n");
-			console.log(csvContent);
-
+			//console.log(csvContent);
+			*/
 			return this; // chaining
 		}
 	}, {
@@ -1289,7 +1290,7 @@ var Layout = function (_ContinuousLayout) {
 			var state = this.state;
 			var isDone = true;
 
-			qArray.push(state.nodes[0].agent.Q);
+			qArray.push(JSON.parse(JSON.stringify(state.nodes[0].agent.Q)));
 
 			state.nodes.forEach(function (n) {
 				_this4.takeStep(n);
@@ -1310,8 +1311,9 @@ var Layout = function (_ContinuousLayout) {
 
 	}, {
 		key: 'postrun',
-		value: function postrun() {}
-
+		value: function postrun() {		/**this.state.nodes.forEach(n => {
+			console.log(n.agent.Q)
+		});*/}
 		// clean up any object refs that could prevent garbage collection, etc.
 
 	}, {
