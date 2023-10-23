@@ -1,4 +1,4 @@
-let qArray = [];
+//let qArray = [];
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -416,7 +416,7 @@ exports.FDLayout = FDLayout;
 module.exports = Object.freeze({
 	animate: true, // whether to show the layout as it's running; special 'end' value makes the layout animate like a discrete layout
 	refresh: 10, // number of ticks per frame; higher is faster but more jerky
-	maxIterations: 10000, // max iterations before the layout will bail out
+	maxIterations: 1000, // max iterations before the layout will bail out
 	maxSimulationTime: 40000, // max length in ms to run the layout
 	ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
 	fit: true, // on every layout reposition of nodes, fit the viewport
@@ -488,7 +488,7 @@ var ContinuousLayout = function () {
 			epsilon: o.epsilon,
 			agent: null
 		});
-		console.log(s)
+		console.log(o)
 
 		s.animateEnd = o.animate && o.animate === 'end';
 		s.animateContinuously = o.animate && !s.animateEnd;
@@ -639,7 +639,7 @@ var ContinuousLayout = function () {
 			
 			//From https://stackoverflow.com/questions/18848860/javascript-array-to-csv
 
-			console.log(qArray);
+			//console.log(qArray);
 			/**let lineArray = [];
 			qArray.forEach(function (infoArray, index) {
     			var line = infoArray.join(",");
@@ -973,17 +973,17 @@ var Layout = function (_ContinuousLayout) {
 		key: 'initAgent',
 		value: function initAgent(state) {
 			var env = {};
+			env.getState = function (n) {
+				return [getNumberOfNodeOverlaps(n), getCurrentLocalStress(n), getNumberOfEdgeCrossings(n), getNodeDistanceVariance(n), getEdgeLengthVariance(n), getAngleVariance(n)]
+			};
 			env.getNumStates = function () {
-				return 9;
+				return 6;
 			};
 			env.getMaxNumActions = function () {
 				return 9;
 			};
 			env.allowedActions = function () {
 				return [0, 1, 2, 3, 4, 5, 6, 7, 8];
-			};
-			env.initialState = function () {
-				return 4;
 			};
 			var spec = {};
 			spec.update = 'qlearn'; // 'qlearn' or 'sarsa'
@@ -997,7 +997,7 @@ var Layout = function (_ContinuousLayout) {
 			spec.smooth_policy_update = false; // non-standard, updates policy smoothly to follow max_a Q
 			spec.beta = 0.3; // learning rate for smooth policy update
 
-			state.agent = new RL.TDAgent(env, spec);
+			state.agent = new RL.DQNAgent(env, spec);
 		}
 	}, {
 		key: 'initScratch',
@@ -1299,6 +1299,7 @@ var Layout = function (_ContinuousLayout) {
 				//console.log(scratch.agent);
 			});
 			// Adding the agent if one doesn't exist
+			console.log(state.agent)
 			if(state.agent === null){
 				console.log("Init agent");
 				_this3.initAgent(state);
@@ -1315,7 +1316,7 @@ var Layout = function (_ContinuousLayout) {
 			var state = this.state;
 			var isDone = true;
 
-			qArray.push(JSON.parse(JSON.stringify(state.agent.Q)));
+			//qArray.push(JSON.parse(JSON.stringify(state.agent.Q)));
 
 			state.nodes.forEach(function (n) {
 				_this4.takeStep(n);
@@ -1336,7 +1337,7 @@ var Layout = function (_ContinuousLayout) {
 
 	}, {
 		key: 'postrun',
-		value: function postrun() {	}
+		value: function postrun() {	console.log(this.state.agent)}
 		// clean up any object refs that could prevent garbage collection, etc.
 
 	}, {
