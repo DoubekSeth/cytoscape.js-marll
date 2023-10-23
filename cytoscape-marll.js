@@ -645,8 +645,9 @@ var ContinuousLayout = function () {
     			lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
 			});
 			let csvContent = lineArray.join("\n");
-			//console.log(csvContent);
+			console.log(csvContent);
 			*/
+
 			return this; // chaining
 		}
 	}, {
@@ -1304,6 +1305,8 @@ var Layout = function (_ContinuousLayout) {
 			if (this.state.currentIteration > 0 && this.state.currentIteration % 800 == 0) {
 				this.state.delta /= 2;
 			}
+
+			qArray.push(JSON.parse(JSON.stringify(state.nodes[0].agent.Q)));
 			return false; //this.FDLayout.isConverged();
 		}
 
