@@ -415,8 +415,8 @@ exports.FDLayout = FDLayout;
 
 module.exports = Object.freeze({
 	animate: true, // whether to show the layout as it's running; special 'end' value makes the layout animate like a discrete layout
-	refresh: 1, // number of ticks per frame; higher is faster but more jerky
-	maxIterations: 1000, // max iterations before the layout will bail out
+	refresh: 10, // number of ticks per frame; higher is faster but more jerky
+	maxIterations: 10000, // max iterations before the layout will bail out
 	maxSimulationTime: 40000, // max length in ms to run the layout
 	ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
 	fit: true, // on every layout reposition of nodes, fit the viewport
@@ -971,7 +971,7 @@ var Layout = function (_ContinuousLayout) {
 
 	_createClass(Layout, [{
 		key: 'initAgent',
-		value: function initAgent(n, scratch) {
+		value: function initAgent(state) {
 			var env = {};
 			env.getNumStates = function () {
 				return 9;
@@ -997,11 +997,26 @@ var Layout = function (_ContinuousLayout) {
 			spec.smooth_policy_update = false; // non-standard, updates policy smoothly to follow max_a Q
 			spec.beta = 0.3; // learning rate for smooth policy update
 
-			scratch.agent = new RL.TDAgent(env, spec);
-			//console.log(scratch.agent);
+			state.agent = new RL.TDAgent(env, spec);
+		}
+	}, {
+		key: 'initScratch',
+		value: function initScratch(n, scratch) {
+			var env = {};
+			env.getNumStates = function () {
+				return 9;
+			};
+			env.getMaxNumActions = function () {
+				return 9;
+			};
+			env.allowedActions = function () {
+				return [0, 1, 2, 3, 4, 5, 6, 7, 8];
+			};
+			env.initialState = function () {
+				return 4;
+			};
 			scratch.env = env;
 			scratch.state = 4;
-			scratch.agent.counter = 0;
 			scratch.oldTotalForce = null;
 		}
 	}, {
@@ -1226,7 +1241,7 @@ var Layout = function (_ContinuousLayout) {
 
 			var totalForce = this.rewardFunction(n);
 			var scratch = n; //this.getScratch( n ); // per-element layout data/state, x/y, etc.
-			var action = scratch.agent.act(scratch.state);
+			var action = this.state.agent.act(scratch.state);
 			var displacementX = displacement[action][0];
 			var displacementY = displacement[action][1];
 			scratch.x += displacement[action][0] * delta;
@@ -1247,7 +1262,7 @@ var Layout = function (_ContinuousLayout) {
 
 			scratch.oldTotalForce = totalForce;
 			if(this.state.learning){
-				scratch.agent.learn(reward, scratch.state, action);
+				this.state.agent.learn(reward, scratch.state, action);
 			}
 			if (reward < 0 && Math.random() > 0.1) {
 				scratch.x -= displacement[action][0] * delta;
@@ -1279,12 +1294,15 @@ var Layout = function (_ContinuousLayout) {
 				}
 				n.edges = n.connectedEdges();
 				n.ID = n.id();
-				if(typeof scratch.agent === "undefined"){
-					console.log("Init agents")
-					_this3.initAgent(n, scratch);
-				}
+				
+				_this3.initScratch(n, scratch);
 				//console.log(scratch.agent);
 			});
+			// Adding the agent if one doesn't exist
+			if(state.agent === null){
+				console.log("Init agent");
+				_this3.initAgent(state);
+			}
 		}
 
 		// run this each iteraction
@@ -1297,7 +1315,7 @@ var Layout = function (_ContinuousLayout) {
 			var state = this.state;
 			var isDone = true;
 
-			qArray.push(JSON.parse(JSON.stringify(state.nodes[0].agent.Q)));
+			qArray.push(JSON.parse(JSON.stringify(state.agent.Q)));
 
 			state.nodes.forEach(function (n) {
 				_this4.takeStep(n);
@@ -1318,9 +1336,7 @@ var Layout = function (_ContinuousLayout) {
 
 	}, {
 		key: 'postrun',
-		value: function postrun() {		this.state.nodes.forEach(n => {
-			console.log(n.agent.Q)
-		});}
+		value: function postrun() {	}
 		// clean up any object refs that could prevent garbage collection, etc.
 
 	}, {
