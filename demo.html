@@ -92,6 +92,7 @@
 							{ data: { source: 'v3', target: 'v6', directed: 'false'} },
 						]
 					}
+					
         });
         document.getElementById("layoutButton").addEventListener("click", function(){
           var layout = cy.layout({
@@ -101,7 +102,8 @@
 			      numIter: 1000,
 			      repulsionConstant: 100,
 			      animate: document.getElementById("animate").checked,
-            learning: !document.getElementById("usePolicy").checked
+            learning: !document.getElementById("usePolicy").checked,
+            rewardFunction: "localStress",
           });
 
           layout.run();
