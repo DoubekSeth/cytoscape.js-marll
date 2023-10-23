@@ -98,10 +98,11 @@
           var layout = cy.layout({
             name: 'marll',
             animationDuration: 1000,
-			randomize: false,
-			numIter: 1000,
-			repulsionConstant: 100,
-			animate: false
+			      randomize: false,
+			      numIter: 1000,
+			      repulsionConstant: 100,
+			      animate: true,
+            learning: !document.getElementById("usePolicy").checked
           });
 
           layout.run();
@@ -125,7 +126,7 @@
 
     <button id="randomize" type="button">Randomize</button>
     <button id="layoutButton" type="button">MARLL</button>
-    <button id="Use Policy" type="button">Use Policy</button>
+    <input id="usePolicy" type="checkbox">Use Policy</input>
 
     <div id="cy"></div>
 

@@ -477,7 +477,6 @@ var ContinuousLayout = function () {
 		_classCallCheck(this, ContinuousLayout);
 
 		var o = this.options = assign({}, defaults, options);
-
 		var s = this.state = assign({}, o, {
 			layout: this,
 			nodes: o.eles.nodes().toArray(),
@@ -485,8 +484,9 @@ var ContinuousLayout = function () {
 			nodesCollection: o.eles.nodes(),
 			tickIndex: 0,
 			firstUpdate: true,
-			learning: true
+			learning: o.learning
 		});
+		console.log(s)
 
 		s.animateEnd = o.animate && o.animate === 'end';
 		s.animateContinuously = o.animate && !s.animateEnd;
