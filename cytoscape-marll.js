@@ -416,7 +416,7 @@ exports.FDLayout = FDLayout;
 module.exports = Object.freeze({
 	animate: true, // whether to show the layout as it's running; special 'end' value makes the layout animate like a discrete layout
 	refresh: 10, // number of ticks per frame; higher is faster but more jerky
-	maxIterations: 100000, // max iterations before the layout will bail out
+	maxIterations: 10000, // max iterations before the layout will bail out
 	maxSimulationTime: 40000, // max length in ms to run the layout
 	ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
 	fit: true, // on every layout reposition of nodes, fit the viewport
@@ -1244,7 +1244,9 @@ var Layout = function (_ContinuousLayout) {
 
 
 			scratch.oldTotalForce = totalForce;
-			scratch.agent.learn(reward, scratch.state, action);
+			if(this.state.learning){
+				scratch.agent.learn(reward, scratch.state, action);
+			}
 			if (reward < 0 && Math.random() > 0.1) {
 				scratch.x -= displacement[action][0] * delta;
 				scratch.y -= displacement[action][1] * delta;
@@ -1275,8 +1277,10 @@ var Layout = function (_ContinuousLayout) {
 				}
 				n.edges = n.connectedEdges();
 				n.ID = n.id();
-
-				_this3.initAgent(n, scratch);
+				if(typeof scratch.agent === "undefined"){
+					console.log("Init agents")
+					_this3.initAgent(n, scratch);
+				}
 				//console.log(scratch.agent);
 			});
 		}
@@ -1305,8 +1309,6 @@ var Layout = function (_ContinuousLayout) {
 			if (this.state.currentIteration > 0 && this.state.currentIteration % 800 == 0) {
 				this.state.delta /= 2;
 			}
-
-			qArray.push(JSON.parse(JSON.stringify(state.nodes[0].agent.Q)));
 			return false; //this.FDLayout.isConverged();
 		}
 
