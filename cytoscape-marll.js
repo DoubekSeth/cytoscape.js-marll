@@ -484,7 +484,8 @@ var ContinuousLayout = function () {
 			nodesCollection: o.eles.nodes(),
 			tickIndex: 0,
 			firstUpdate: true,
-			learning: o.learning
+			learning: o.learning,
+			epsilon: o.epsilon
 		});
 		console.log(s)
 
@@ -986,7 +987,7 @@ var Layout = function (_ContinuousLayout) {
 			var spec = {};
 			spec.update = 'qlearn'; // 'qlearn' or 'sarsa'
 			spec.gamma = 0.9; // discount factor, [0, 1)
-			spec.epsilon = 0.1; // initial epsilon for epsilon-greedy policy, [0, 1)
+			spec.epsilon = this.state.epsilon; // initial epsilon for epsilon-greedy policy, [0, 1)
 			spec.alpha = 0.1; // value function learning rate
 			spec.lambda = 0.1; // eligibility trace decay, [0,1). 0 = no eligibility traces
 			spec.replacing_traces = false; // use replacing or accumulating traces

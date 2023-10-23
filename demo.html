@@ -37,6 +37,9 @@
       button {
         margin-right: 10px;
       }
+      #epsilon {
+         width: 4em;
+      }
     </style>
 
     <script>
@@ -78,19 +81,15 @@
 							{ data: { id: 'v4', weight: 4} },
 							{ data: { id: 'v5', weight: 5} },
 							{ data: { id: 'v6', weight: 6} },
-							{ data: { id: 'v7', weight: 7} },
-							{ data: { id: 'v8', weight: 7} },
 							{ data: { id: 'v0', weight: 7} }
 						],
 						edges: [
-							{ data: { source: 'v1', target: 'v0', directed: 'false'} },
-							{ data: { source: 'v2', target: 'v0', directed: 'false'} },
-							{ data: { source: 'v3', target: 'v0', directed: 'false'} },
-							{ data: { source: 'v4', target: 'v0', directed: 'false'} },
-							{ data: { source: 'v5', target: 'v0', directed: 'false'} },
-							{ data: { source: 'v6', target: 'v0', directed: 'false'} },
-							{ data: { source: 'v7', target: 'v0', directed: 'false'} },
-							{ data: { source: 'v8', target: 'v0', directed: 'false'} }
+							{ data: { source: 'v0', target: 'v1', directed: 'false'} },
+							{ data: { source: 'v0', target: 'v2', directed: 'false'} },
+							{ data: { source: 'v0', target: 'v3', directed: 'false'} },
+							{ data: { source: 'v1', target: 'v4', directed: 'false'} },
+							{ data: { source: 'v2', target: 'v5', directed: 'false'} },
+							{ data: { source: 'v3', target: 'v6', directed: 'false'} },
 						]
 					}
         });
@@ -101,7 +100,7 @@
 			      randomize: false,
 			      numIter: 1000,
 			      repulsionConstant: 100,
-			      animate: true,
+			      animate: document.getElementById("animate").checked,
             learning: !document.getElementById("usePolicy").checked
           });
 
@@ -127,6 +126,8 @@
     <button id="randomize" type="button">Randomize</button>
     <button id="layoutButton" type="button">MARLL</button>
     <input id="usePolicy" type="checkbox">Use Policy</input>
+    <input id="animate" checked="true" type="checkbox">Use Animation</input>
+    <input id="epsilon" type="number" value=".1">Epsilon</input>
 
     <div id="cy"></div>
 
