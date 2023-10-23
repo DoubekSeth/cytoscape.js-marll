@@ -44,7 +44,8 @@
 
     <script>
       document.addEventListener('DOMContentLoaded',function(){
-
+        let cyAgent = null;
+        
         var cy = window.cy = cytoscape({
           container: document.getElementById('cy'),
 
@@ -104,9 +105,10 @@
 			      animate: document.getElementById("animate").checked,
             learning: !document.getElementById("usePolicy").checked,
             rewardFunction: "localStress",
+            agent: cyAgent
           });
 
-          layout.run();
+          cyAgent = layout.run().state.agent;
         });
         document.getElementById("randomize").addEventListener("click", function(){
           var layout = cy.layout({

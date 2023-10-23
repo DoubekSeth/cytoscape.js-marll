@@ -476,7 +476,7 @@ var ContinuousLayout = function () {
 		_classCallCheck(this, ContinuousLayout);
 
 		var o = this.options = assign({}, defaults, options);
-		console.log(o)
+		//console.log(o)
 		var s = this.state = assign({}, o, {
 			layout: this,
 			nodes: o.eles.nodes().toArray(),
@@ -486,8 +486,9 @@ var ContinuousLayout = function () {
 			firstUpdate: true,
 			learning: o.learning,
 			epsilon: o.epsilon,
-			agent: null
+			agent: o.agent
 		});
+		//console.log(s)
 
 		s.animateEnd = o.animate && o.animate === 'end';
 		s.animateContinuously = o.animate && !s.animateEnd;
@@ -1298,7 +1299,7 @@ var Layout = function (_ContinuousLayout) {
 				//console.log(scratch.agent);
 			});
 			// Adding the agent if one doesn't exist
-			console.log(state.agent)
+			//console.log(state.agent)
 			if(state.agent === null){
 				console.log("Init agent");
 				_this3.initAgent(state);
