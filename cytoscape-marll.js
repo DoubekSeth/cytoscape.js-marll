@@ -431,8 +431,7 @@ module.exports = Object.freeze({
 	randomize: true, // use random node positions at beginning of layout
 
 	// infinite layout options
-	infinite: false // overrides all other options for a forces-all-the-time mode
-
+	infinite: false, // overrides all other options for a forces-all-the-time mode
 });
 
 /***/ }),
@@ -477,6 +476,7 @@ var ContinuousLayout = function () {
 		_classCallCheck(this, ContinuousLayout);
 
 		var o = this.options = assign({}, defaults, options);
+		console.log(o)
 		var s = this.state = assign({}, o, {
 			layout: this,
 			nodes: o.eles.nodes().toArray(),
@@ -488,7 +488,6 @@ var ContinuousLayout = function () {
 			epsilon: o.epsilon,
 			agent: null
 		});
-		console.log(o)
 
 		s.animateEnd = o.animate && o.animate === 'end';
 		s.animateContinuously = o.animate && !s.animateEnd;
