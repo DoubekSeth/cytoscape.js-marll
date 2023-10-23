@@ -485,7 +485,8 @@ var ContinuousLayout = function () {
 			tickIndex: 0,
 			firstUpdate: true,
 			learning: o.learning,
-			epsilon: o.epsilon
+			epsilon: o.epsilon,
+			agent: null
 		});
 		console.log(s)
 
