@@ -41,7 +41,7 @@
          width: 4em;
       }
     </style>
-
+    
     <script>
       document.addEventListener('DOMContentLoaded',function(){
         let cyAgent = null;
@@ -82,7 +82,7 @@
 
      
         });
-        document.getElementById("layoutButton").addEventListener("click", function(){
+        document.getElementById("layoutButton").addEventListener("click", async function(){
           var layout = cy.layout({
             name: 'marll',
             animationDuration: 1000,
@@ -95,7 +95,8 @@
             agent: cyAgent
           });
 
-          cyAgent = layout.run().state.agent;
+          let cyState = await layout.run();
+          cyAgent = cyState.state.agent;
         });
         document.getElementById("randomize").addEventListener("click", function(){
           var layout = cy.layout({
@@ -107,35 +108,43 @@
 
           layout.run();
         });
-        document.getElementById("train").addEventListener("click", function(){
+        document.getElementById("train").onclick=async() => {
+            const delay = ms => new Promise(res => setTimeout(res, ms));
           for(iter=0; iter < 15; iter++){
             console.log(iter)
-          var layout = cy.layout({
-            name: 'marll',
-            animationDuration: 1000,
-			      randomize: false,
-			      numIter: 1000,
-			      repulsionConstant: 100,
-			      animate: document.getElementById("animate").checked,
-            learning: !document.getElementById("usePolicy").checked,
-            rewardFunction: "customReward",
-            agent: cyAgent
+            var layout = cy.layout({
+                name: 'marll',
+                animationDuration: 1000,
+			    randomize: false,
+			    numIter: 1000,
+			    repulsionConstant: 100,
+			    animate: document.getElementById("animate").checked,
+                learning: !document.getElementById("usePolicy").checked,
+                rewardFunction: "customReward",
+                agent: cyAgent
           });
 
-          cyAgent = layout.run().state.agent;
-          cyAgent = layout.run().state.agent;
+            let cyState = await layout.run();
+            //console.log(cyState);
+            cyAgent = cyState.state.agent;
 
-          var layout = cy.layout({
-            name: 'random',
-            animate: true,
-            animationDuration: 1000,
-            animationEasing: 'ease-out',
-          });
-
-          layout.run();
+            //console.log("Happy days");
+            //cyState = await layout.promisedRun();
+            //cyAgent = cyState.state.agent;
+            console.log("Starting wait");
+            await delay(4000);
+            console.log("Ending wait");
+            var layout = cy.layout({
+                name: 'random',
+                animate: document.getElementById("animate").checked,
+                animationDuration: 1000,
+                animationEasing: 'ease-out',
+            });
+            await layout.run();
+            console.log("Randomized");
+            }
         }
-        });
-      });
+    });
     </script>
   </head>
 
