@@ -429,6 +429,7 @@
           });
 
           let cyState = await layout.run();
+		  console.log(cyState);
           cyAgent = cyState.state.agent;
         });
         document.getElementById("randomize").addEventListener("click", function(){

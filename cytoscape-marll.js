@@ -520,7 +520,7 @@
           module.exports = Object.freeze({
             animate: true, // whether to show the layout as it's running; special 'end' value makes the layout animate like a discrete layout
             refresh: 10, // number of ticks per frame; higher is faster but more jerky
-            maxIterations: 5000, // max iterations before the layout will bail out
+            maxIterations: 1000, // max iterations before the layout will bail out
             maxSimulationTime: 40000, // max length in ms to run the layout
             ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
             fit: true, // on every layout reposition of nodes, fit the viewport
@@ -1259,6 +1259,8 @@ A generic continuous layout class
                       getNodeDistanceVariance(n),
                       getEdgeLengthVariance(n),
                       getAngleVariance(n),
+                      getX(n),
+                      getY(n)
                     ];
                   };
                   env.getNumStates = function () {
@@ -1571,6 +1573,18 @@ A generic continuous layout class
                   );
                   return variance;
                 },
+              },
+              {
+                key: "getX",
+                value: function getX(n) {
+                  return n.x
+                }
+              },
+              {
+                key: "getY",
+                value: function getY(n) {
+                  return n.y
+                }
               },
               {
                 key: "takeStep",
