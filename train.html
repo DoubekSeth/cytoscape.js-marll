@@ -424,7 +424,7 @@
 			      repulsionConstant: 100,
 			      animate: document.getElementById("animate").checked,
             learning: !document.getElementById("usePolicy").checked,
-            rewardFunction: "localStress",
+            rewardFunction: "forceDirectedFR",
             agent: cyAgent
           });
 
@@ -444,7 +444,7 @@
         });
         document.getElementById("train").onclick=async() => {
             const delay = ms => new Promise(res => setTimeout(res, ms));
-          for(iter=0; iter < 200; iter++){
+          for(iter=0; iter < 50; iter++){
             var layout = cy.layout({
                 name: 'marll',
                 animationDuration: 1000,
