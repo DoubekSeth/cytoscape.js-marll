@@ -1278,11 +1278,12 @@ A generic continuous layout class
                   spec.epsilon = this.state.epsilon; // initial epsilon for epsilon-greedy policy, [0, 1)
                   spec.alpha = 0.1; // value function learning rate
                   spec.lambda = 0.1; // eligibility trace decay, [0,1). 0 = no eligibility traces
-                  spec.replacing_traces = false; // use replacing or accumulating traces
-                  spec.planN = 20; // number of planning steps per iteration. 0 = no planning
+                  //spec.replacing_traces = false; // use replacing or accumulating traces
+                  //spec.planN = 20; // number of planning steps per iteration. 0 = no planning
 
-                  spec.smooth_policy_update = false; // non-standard, updates policy smoothly to follow max_a Q
-                  spec.beta = 0.3; // learning rate for smooth policy update
+                  //spec.smooth_policy_update = false; // non-standard, updates policy smoothly to follow max_a Q
+                  //spec.beta = 0.3; // learning rate for smooth policy update
+                  spec.num_hidden_units = 20;
 
                   state.agent = new RL.DQNAgent(env, spec);
                 },
