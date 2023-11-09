@@ -487,7 +487,7 @@ var ContinuousLayout = function () {
 			learning: o.learning,
 			epsilon: o.epsilon
 		});
-		console.log(s)
+		//console.log(s)
 
 		s.animateEnd = o.animate && o.animate === 'end';
 		s.animateContinuously = o.animate && !s.animateEnd;
@@ -638,7 +638,7 @@ var ContinuousLayout = function () {
 			
 			//From https://stackoverflow.com/questions/18848860/javascript-array-to-csv
 
-			console.log(qArray);
+			//console.log(qArray);
 			/**let lineArray = [];
 			qArray.forEach(function (infoArray, index) {
     			var line = infoArray.join(",");
@@ -991,10 +991,10 @@ var Layout = function (_ContinuousLayout) {
 			spec.alpha = 0.1; // value function learning rate
 			spec.lambda = 0.1; // eligibility trace decay, [0,1). 0 = no eligibility traces
 			spec.replacing_traces = false; // use replacing or accumulating traces
-			spec.planN = 20; // number of planning steps per iteration. 0 = no planning
+			spec.planN = 0; // number of planning steps per iteration. 0 = no planning
 
 			spec.smooth_policy_update = false; // non-standard, updates policy smoothly to follow max_a Q
-			spec.beta = 0.3; // learning rate for smooth policy update
+			//spec.beta = 0.3; // learning rate for smooth policy update
 
 			scratch.agent = new RL.TDAgent(env, spec);
 			//console.log(scratch.agent);
@@ -1246,6 +1246,7 @@ var Layout = function (_ContinuousLayout) {
 
 			scratch.oldTotalForce = totalForce;
 			if(this.state.learning){
+        //console.log("LEARNING");
 				scratch.agent.learn(reward, scratch.state, action);
 			}
 			if (reward < 0 && Math.random() > 0.1) {
@@ -1318,7 +1319,7 @@ var Layout = function (_ContinuousLayout) {
 	}, {
 		key: 'postrun',
 		value: function postrun() {		this.state.nodes.forEach(n => {
-			console.log(n.agent.Q)
+			console.log(n.agent)
 		});}
 		// clean up any object refs that could prevent garbage collection, etc.
 
